@@ -9,11 +9,9 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Grid from '@mui/material/Grid';
-import ButtonBase from '@mui/material/ButtonBase';
-import Link from '@mui/material/Link';
-function EmployeeComponent() {
-  const [universities, setUniversities] = useState([]);
+
+function App() {
+  const [recipes, setRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
@@ -22,7 +20,7 @@ function EmployeeComponent() {
           return res.json()
       })
       .then((result) => {
-        setUniversities(result);
+        setRecipes(result);
       })
       .catch((error) => {
         console.log(error);
@@ -57,7 +55,7 @@ function EmployeeComponent() {
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                        {universities.filter(uni => uni.name.toLowerCase().startsWith(searchInput)).map((row, index) => (
+                        {recipes.filter(uni => uni.name.toLowerCase().startsWith(searchInput)).map((row, index) => (
                             <TableRow
                             key={row.name}
                             onClick={() => {}}
@@ -80,7 +78,7 @@ function EmployeeComponent() {
 }
 
 
-const Element= <EmployeeComponent></EmployeeComponent>
+const Element= <App></App>
 const root=ReactDOM.createRoot(document.getElementById("root"));
 root.render(Element)
     
