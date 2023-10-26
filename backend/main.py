@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from uuid import UUID, uuid4
 from typing import Optional, List
 from sqlalchemy.dialects.postgresql import UUID as alchemyUUID
+from fastapi.middleware.cors import CORSMiddleware
 
 
 SECRET_KEY = "923900b49483a291e85f210d13cd17aff88ca79a73780e6da9121de89626cf8c"
@@ -38,6 +39,22 @@ class RecipeDB(Base):
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# Configure CORS
+origins = [
+    "http://localhost",
+    "http://localhost:3000",  # Add the origin that corresponds to your frontend application
+    # You can add more origins as needed.
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # You can specify specific HTTP methods (e.g., ["GET", "POST"])
+    allow_headers=["*"],  # You can specify specific headers if needed
+)
+
 
 
 db = {
@@ -159,16 +176,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-# @app.get("/users/me/", response_model=User)
-# async def read_users_me(current_user: User = Depends(get_current_active_user)):
-#     return current_user
-#
-#
-# @app.get("/users/me/items/")
-# async def read_own_items(current_user: User = Depends(get_current_active_user)):
-#     return [{"item_id": 1, "owner": current_user}]
-
-
 @app.post("/me/recipes", response_model=RecipeResponse)
 async def create_item(recipe: RecipeResponse, current_user: User = Depends(get_current_active_user)):
     del recipe.id
@@ -178,42 +185,6 @@ async def create_item(recipe: RecipeResponse, current_user: User = Depends(get_c
         session.commit()
         session.refresh(db_recipe)
     return db_recipe
-
-
-@app.get("/recipe/{recipe_id}", response_model=RecipeResponse)
-async def read_item(recipe_id: str, current_user: User = Depends(get_current_active_user)):
-    with SessionLocal() as session:
-        recipe = session.query(RecipeDB).filter(RecipeDB.published).filter(RecipeDB.id == recipe_id).first()
-        if recipe is None:
-            raise HTTPException(status_code=404, detail="Recipe not found")
-
-        # Convert the SQLAlchemy model to the Pydantic model
-        item_response = RecipeResponse(
-            id=recipe.id,
-            name=recipe.name,
-            short=recipe.short,
-            description=recipe.description,
-            published=recipe.published)
-
-        return item_response
-
-
-@app.get("/me/recipe/{recipe_id}", response_model=RecipeResponse)
-async def read_item(recipe_id: str, current_user: User = Depends(get_current_active_user)):
-    with SessionLocal() as session:
-        recipe = session.query(RecipeDB).filter(RecipeDB.owner == current_user.id).filter(RecipeDB.id == recipe_id).first()
-        if recipe is None:
-            raise HTTPException(status_code=404, detail="Recipe not found")
-
-        # Convert the SQLAlchemy model to the Pydantic model
-        item_response = RecipeResponse(
-            id=recipe.id,
-            name=recipe.name,
-            short=recipe.short,
-            description=recipe.description,
-            published=recipe.published)
-
-        return item_response
 
 
 @app.get("/recipes", response_model=List[RecipeResponse])
