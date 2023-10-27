@@ -32,6 +32,7 @@ class RecipeDB(Base):
     name = Column(String, index=True)
     owner = Column(String, index=True)
     short = Column(String)
+    type = Column(String)
     description = Column(String)
     published = Column(Boolean, unique=False, default=False)
 
@@ -89,6 +90,7 @@ class RecipeResponse(BaseModel):
     id: Optional[UUID] = uuid4()
     name: str or None = None
     short: str or None = None
+    type: str or None = None
     description: str or None = None
     published: bool or None = None
 
@@ -201,6 +203,7 @@ async def read_recipes():
                 id=recipe.id,
                 name=recipe.name,
                 short=recipe.short,
+                type=recipe.type,
                 description=recipe.description,
                 published=recipe.published)
             response.append(item_response)
