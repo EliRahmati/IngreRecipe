@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import SchoolIcon from '@mui/icons-material/School';
-import {Typography, Box, Paper, Collapse, Button, TextField} from '@mui/material';
+import {Typography, Box, Paper, Collapse, Button, TextField, Card, CardContent, CardActions, Grid} from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -46,33 +46,36 @@ function App() {
                         <Button variant="contained" style={{margin: 5}}>Next page</Button>
                     </Box>
                 </Paper>
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                        <TableRow>
-                            <TableCell>Food Name</TableCell>
-                            <TableCell align="left">Short Description</TableCell>
-                        </TableRow>
-                        </TableHead>
-                        <TableBody>
-                        {recipes.filter(uni => uni.name.toLowerCase().startsWith(searchInput)).map((row, index) => (
-                            <TableRow
-                            key={row.name}
-                            onClick={() => {}}
-                            style={{backgroundColor: "white"}}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell align="left">
-                                    {row.short}
-                                </TableCell>
-                            </TableRow>
+                {recipes.filter(uni => uni.name.toLowerCase().startsWith(searchInput)).map((row, index) => (
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <Card sx={{ width: "50%", margin: 1}}>
+                                <CardContent>
+                                    <Box sx={{ display: 'flex'}}>
+                                        <Box width={"35%"}>
+                                            <Typography variant="h5" component="div">
+                                                {row.name}
+                                            </Typography>
+                                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                                {row.type}
+                                            </Typography>
+                                        </Box>
+                                        <Box width={"65%"}>
+                                            <Card sx={{backgroundColor: 'lightgray'}}>
+                                                <CardContent>
+                                                <Typography variant="body2">
+                                                    {row.short}
+                                                </Typography>
+                                                    </CardContent>
+                                            </Card>
+                                        </Box>
+                                    </Box>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">See Recipe</Button>
+                                </CardActions>
+                            </Card>
+                        </Box>
                         ))}
-                        </TableBody>
-                    </Table>
-                    </TableContainer>
             </div>
         );
 }
