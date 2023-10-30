@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import Search from "./Search"
 import RegisterLogin from "./RegisterLogin";
-import {Box} from "@mui/material";
+import {BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./Home";
+
 
 
 const AppContext = createContext();
@@ -32,10 +34,14 @@ export default useAppContext;
 function App() {
    return (
        <AppProvider>
-          <Box>
-             <RegisterLogin></RegisterLogin>
-             <Search></Search>
-          </Box>
+          <BrowserRouter>
+             <Routes>
+                 <Route exact path="/" element={<Home/>}/>
+                 <Route exact path="/login" element={<RegisterLogin/>}/>
+                 <Route exact path="/recipes" element={<Search published={true}/>}/>
+                 <Route exact path="/myrecipes" element={<Search published={false}/>}/>
+             </Routes>
+          </BrowserRouter>
        </AppProvider>
    );
 }

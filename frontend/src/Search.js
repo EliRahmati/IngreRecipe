@@ -1,23 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import SchoolIcon from '@mui/icons-material/School';
 import {Typography, Box, Paper, Button, TextField, Card, CardContent, CardActions} from '@mui/material';
+import useAppContext from "./index";
 
-function Search() {
+function Search({published}) {
+    const {token} = useAppContext()
   const [recipes, setRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
-    fetch("http://localhost:8000/recipes")
-      .then((res) => {
-          return res.json()
-      })
-      .then((result) => {
-        setRecipes(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+      console.log(token)
+      if (published) {
+          fetch("http://localhost:8000/recipes")
+          .then((res) => {
+              return res.json()
+          })
+          .then((result) => {
+            setRecipes(result);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+          fetch("http://localhost:8000/me/recipes", {
+            method: "GET",
+            headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
+        })
+          .then((res) => {
+              if (res.status === 200)
+                return res.json()
+              else
+                  return []
+          })
+          .then((result) => {
+              setRecipes(result)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
+  }, [searchInput]);
 
         return (
             <div>

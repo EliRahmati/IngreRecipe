@@ -191,7 +191,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 @app.post("/users", response_model=User)
 async def create_item(user: User):
     del user.id
-    db_user = UserDB(id=uuid4(), **user.model_dump())
+    password = user.password
+    hashed_pass = get_password_hash(password)
+    del user.password
+    db_user = UserDB(id=uuid4(), **user.model_dump(), password=hashed_pass)
     with SessionLocal() as session:
         session.add(db_user)
         session.commit()
