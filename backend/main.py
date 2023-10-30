@@ -30,11 +30,21 @@ class RecipeDB(Base):
 
     id = Column(alchemyUUID(as_uuid=True), primary_key=True, index=True)
     name = Column(String, index=True)
-    owner = Column(String, index=True)
+    owner = Column(alchemyUUID(as_uuid=True), index=True)
     short = Column(String)
     type = Column(String)
     description = Column(String)
     published = Column(Boolean, unique=False, default=False)
+
+
+class UserDB(Base):
+    __tablename__: str = "users"
+
+    id = Column(alchemyUUID(as_uuid=True), primary_key=True, index=True)
+    username = Column(String, index=True)
+    full_name = Column(String)
+    email = Column(String)
+    password = Column(String)
 
 
 Base.metadata.create_all(bind=engine)
@@ -58,15 +68,15 @@ app.add_middleware(
 
 
 
-db = {
-    "elham":{
-        "username": "elham",
-        "full_name": "Elham Rahmati",
-        "email": "elham.rahmati@code.berlin",
-        "hashed_password": "$2b$12$pQqmBD73Xi70OMhFjK31NeJhsnkLTDsnZoHPKrRSG/yRH79iiSrfW",
-        "disabled": False
-    }
-}
+# db = {
+#     "elham":{
+#         "username": "elham",
+#         "full_name": "Elham Rahmati",
+#         "email": "elham.rahmati@code.berlin",
+#         "hashed_password": "$2b$12$pQqmBD73Xi70OMhFjK31NeJhsnkLTDsnZoHPKrRSG/yRH79iiSrfW",
+#         "disabled": False
+#     }
+# }
 
 
 class Token(BaseModel):
@@ -83,7 +93,7 @@ class User(BaseModel):
     username: str or None = None
     full_name: str or None = None
     email: str or None = None
-    disabled: bool or None = None
+    password: str or None = None
 
 
 class RecipeResponse(BaseModel):
@@ -111,17 +121,20 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(db, username: str):
-    if username in db:
-        user_data = db[username]
-        return UserInDB(**user_data)
+def get_user(username: str):
+    with SessionLocal() as session:
+        user = session.query(UserDB).filter(UserDB.username == username).first()
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        return user
 
 
-def authentication_user(db, username: str, password: str):
-    user = get_user(db, username)
+def authentication_user(username: str, password: str):
+    user = get_user(username)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.password):
         return False
 
     return user
@@ -153,7 +166,7 @@ async def get_current_user(token: str = Depends(oauth_2_scheme)):
     except JWTError:
         raise credential_exception
 
-    user = get_user(db, username=token_data.username)
+    user = get_user(username=token_data.username)
     if user is None:
         raise credential_exception
 
@@ -161,21 +174,29 @@ async def get_current_user(token: str = Depends(oauth_2_scheme)):
 
 
 async def get_current_active_user(current_user: UserInDB = Depends(get_current_user)):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-
     return current_user
 
 
 @app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authentication_user(db, form_data.username, form_data.password)
+    user = authentication_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail="Incorrect username or password", headers={"WWW-Authentication": "Bearer"})
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.post("/users", response_model=User)
+async def create_item(user: User):
+    del user.id
+    db_user = UserDB(id=uuid4(), **user.model_dump())
+    with SessionLocal() as session:
+        session.add(db_user)
+        session.commit()
+        session.refresh(db_user)
+    return db_user
 
 
 @app.post("/me/recipes", response_model=RecipeResponse)
@@ -189,12 +210,34 @@ async def create_item(recipe: RecipeResponse, current_user: User = Depends(get_c
     return db_recipe
 
 
+@app.get("/me/recipes", response_model=List[RecipeResponse])
+async def read_recipes(current_user: User = Depends(get_current_active_user)):
+    with SessionLocal() as session:
+        recipes = session.query(RecipeDB).filter(RecipeDB.owner == current_user.id)
+        if recipes is None:
+            raise HTTPException(status_code=404, detail="Recipes not found")
+
+        response = []
+
+        for recipe in recipes:
+            item_response = RecipeResponse(
+                id=recipe.id,
+                name=recipe.name,
+                short=recipe.short,
+                type=recipe.type,
+                description=recipe.description,
+                published=recipe.published)
+            response.append(item_response)
+
+        return response
+
+
 @app.get("/recipes", response_model=List[RecipeResponse])
 async def read_recipes():
     with SessionLocal() as session:
         recipes = session.query(RecipeDB).filter(RecipeDB.published == True)
         if recipes is None:
-            raise HTTPException(status_code=404, detail="Recipe not found")
+            raise HTTPException(status_code=404, detail="Recipes not found")
 
         response = []
 
