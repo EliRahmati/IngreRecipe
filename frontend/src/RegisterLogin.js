@@ -32,7 +32,7 @@ function RegisterLogin() {
               if (result.access_token) {
                   setError(false)
                   updateToken(result.access_token)
-                  navigate('/myrecipes')
+                  navigate('/my-recipes')
               } else {
                   setError(true)
                   updateToken('')

@@ -1,12 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import SchoolIcon from '@mui/icons-material/School';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {Typography, Box, Paper, Button, TextField, Card, CardContent, CardActions} from '@mui/material';
 import useAppContext from "./index";
+import {Link} from "react-router-dom";
 
 function Search({published}) {
     const {token} = useAppContext()
-  const [recipes, setRecipes] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
+    const [recipes, setRecipes] = useState([]);
+    const [searchInput, setSearchInput] = useState('');
+    const [refresh, setRefresh] = useState(false);
+    const [type, setType] = useState('');
+    const [name, setName] = useState("");
+    const [short, setShort] = useState("");
+    const [description, setDescription] = useState("");
+
+    console.log(token)
+    const handleDeleteClick = (id) => {
+            fetch(`http://localhost:8000/me/recipe/${id}`, {
+                method: "DELETE",
+                headers: {'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}`}
+            })
+              .then((res) => {
+                  return res.json()
+              })
+              .then((result) => {
+                  if (result.message === "Item deleted") {
+                                        console.log(result)
+                     setRefresh(value => !value);
+                  } else {
+
+                  }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+        }
+
 
   useEffect(() => {
       console.log(token)
@@ -40,16 +69,22 @@ function Search({published}) {
           });
       }
 
-  }, [searchInput]);
+  }, [searchInput, refresh]);
 
         return (
             <div>
                 <Paper variant="outlined" style={{ background: "lightgray" }}>
                     <Box display={'flex'}>
-                        <SchoolIcon style={{fontSize: '3em', marginRight: 25}}/>
+                        <RestaurantIcon style={{fontSize: '3em', marginRight: 25}}/>
                         <Typography variant="h3" component="h3">
                             List of Recipes
                         </Typography>
+                        <Button component={Link} to="/new-recipe" color="primary" variant="contained" sx={{margin: 2}}>
+                            Create New Recipe
+                        </Button>
+                        <Button component={Link} to="/" color="primary" variant="contained" sx={{margin: 2}}>
+                            Home
+                        </Button>
                     </Box>
                 </Paper>
                 <Paper variant="outlined">
@@ -87,6 +122,10 @@ function Search({published}) {
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small">See Recipe</Button>
+                                    {!published && <Button onClick={(event) => handleDeleteClick(row.id)} size="small">Delete</Button>}
+                                    {!published && <Button component={Link} to={`/edit-recipe/:${row.id}`} color="primary">
+                                        Edit
+                                    </Button>}
                                 </CardActions>
                             </Card>
                         </Box>

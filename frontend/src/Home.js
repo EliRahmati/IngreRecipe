@@ -40,7 +40,7 @@ const Home = () => {
               </Button>
             </li>
             <li>
-              <Button component={Link} to="/myrecipes" color="primary" variant="contained">
+              <Button component={Link} to="/my-recipes" color="primary" variant="contained">
                 My Recipes
               </Button>
             </li>

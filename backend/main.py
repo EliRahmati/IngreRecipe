@@ -256,6 +256,54 @@ async def read_recipes():
 
         return response
 
+@app.delete("/me/recipe/{recipe_id}")
+async def delete_item(recipe_id: UUID, current_user: User = Depends(get_current_active_user)):
+    with SessionLocal() as session:
+        recipe = session.query(RecipeDB).filter(RecipeDB.id == recipe_id).filter(RecipeDB.owner == current_user.id).first()
+        if recipe is None:
+            raise HTTPException(status_code=404, detail="Recipe not found")
+
+    session.delete(recipe)
+    session.commit()
+    return {"message": "Item deleted"}
+
+@app.put("/me/recipe/{recipe_id}")
+async def edit_item(recipe_id: UUID, edited_recipe: RecipeResponse, current_user: User = Depends(get_current_active_user)):
+    with SessionLocal() as session:
+        recipe = session.query(RecipeDB).filter(RecipeDB.id == recipe_id).filter(
+            RecipeDB.owner == current_user.id).first()
+        if recipe is None:
+            raise HTTPException(status_code=404, detail="Recipe not found")
+
+        recipe.name = edited_recipe.name
+        recipe.type = edited_recipe.type
+        recipe.short = edited_recipe.short
+        recipe.published = edited_recipe.published
+        recipe.description = edited_recipe.description
+        session.commit()
+        session.refresh(recipe)
+    return recipe
+
+@app.get("/me/recipe/{recipe_id}")
+async def get_item(recipe_id: UUID, current_user: User = Depends(get_current_active_user)):
+    with SessionLocal() as session:
+        recipe = session.query(RecipeDB).filter(RecipeDB.id == recipe_id).filter(
+            RecipeDB.owner == current_user.id).first()
+        if recipe is None:
+            raise HTTPException(status_code=404, detail="Recipe not found")
+
+    return recipe
+
+@app.get("/recipe/{recipe_id}")
+async def get_item(recipe_id: UUID):
+    with SessionLocal() as session:
+        recipe = session.query(RecipeDB).filter(RecipeDB.id == recipe_id).filter(
+            RecipeDB.published == True).first()
+        if recipe is None:
+            raise HTTPException(status_code=404, detail="Recipe not found")
+
+    return recipe
+
 
 if __name__ == "__main__":
     import uvicorn

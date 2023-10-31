@@ -5,6 +5,7 @@ import Search from "./Search"
 import RegisterLogin from "./RegisterLogin";
 import {BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Home";
+import NewRecipe from "./NewRecipe";
 
 
 
@@ -39,7 +40,9 @@ function App() {
                  <Route exact path="/" element={<Home/>}/>
                  <Route exact path="/login" element={<RegisterLogin/>}/>
                  <Route exact path="/recipes" element={<Search published={true}/>}/>
-                 <Route exact path="/myrecipes" element={<Search published={false}/>}/>
+                 <Route exact path="/my-recipes" element={<Search published={false}/>}/>
+                 <Route exact path="/new-recipe" element={<NewRecipe/>}/>
+                 <Route exact path="/edit-recipe/:id" element={<NewRecipe/>}/>
              </Routes>
           </BrowserRouter>
        </AppProvider>
