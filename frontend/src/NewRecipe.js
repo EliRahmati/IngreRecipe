@@ -28,32 +28,6 @@ function NewRecipe() {
     const [error, setError] = useState(false)
     const recipe_id = id.slice(1)
 
-
-    useEffect(() => {
-      console.log(token)
-      if (recipe_id) {
-          fetch(`http://localhost:8000/me/recipe/${recipe_id}`, {
-            method: "GET",
-            headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
-        })
-          .then((res) => {
-              return res.json()
-          })
-          .then((result) => {
-              setName(result.name);
-              setType(result.type);
-              setShort(result.short);
-              setDescription(result.description);
-              setPublished(result.published)
-            console.log(result);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-
-  }, [id]);
-
     const handleRecipeClick = () => {
         fetch("http://localhost:8000/me/recipes", {
             method: "POST",
@@ -112,6 +86,32 @@ function NewRecipe() {
                 console.log(error);
               });
         }
+
+
+    useEffect(() => {
+      console.log(token)
+      if (recipe_id) {
+          fetch(`http://localhost:8000/me/recipe/${recipe_id}`, {
+            method: "GET",
+            headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
+        })
+          .then((res) => {
+              return res.json()
+          })
+          .then((result) => {
+              setName(result.name);
+              setType(result.type);
+              setShort(result.short);
+              setDescription(result.description);
+              setPublished(result.published)
+            console.log(result);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
+  }, [id]);
 
         return (
             <Box sx={{justifyContent: 'center', display: 'flex' }}>
