@@ -5,7 +5,8 @@ import useAppContext from "./index";
 import {Link} from "react-router-dom";
 
 function Search({published}) {
-    const {token} = useAppContext()
+    const {user} = useAppContext()
+    const {token} = user
     const [recipes, setRecipes] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [refresh, setRefresh] = useState(false);

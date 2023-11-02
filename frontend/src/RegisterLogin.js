@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 
 function RegisterLogin() {
     const navigate = useNavigate();
-    const {updateToken} = useAppContext()
+    const {updateUser} = useAppContext()
     const [username, setUsername] = useState("");
     const [fullname, setFullname] = useState("");
     const [email, setEmail] = useState("");
@@ -31,11 +31,11 @@ function RegisterLogin() {
           .then((result) => {
               if (result.access_token) {
                   setError(false)
-                  updateToken(result.access_token)
-                  navigate('/my-recipes')
+                  updateUser({username: loginUsername, token: result.access_token})
+                  navigate('/')
               } else {
                   setError(true)
-                  updateToken('')
+                  updateUser({username: '', token: ''})
               }
           })
           .catch((error) => {

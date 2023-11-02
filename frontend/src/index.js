@@ -11,14 +11,14 @@ import NewRecipe from "./NewRecipe";
 
 const AppContext = createContext();
 const AppProvider = ({ children }) => {
-  const [token, setToken] = useState('Initial Value');
+  const [user, setUser] = useState({username: '', token: ''});
 
-  const updateToken = (newValue) => {
-    setToken(newValue);
+  const updateUser = (newValue) => {
+    setUser(newValue);
   };
 
   return (
-    <AppContext.Provider value={{ token, updateToken }}>
+    <AppContext.Provider value={{ user, updateUser }}>
       {children}
     </AppContext.Provider>
   );

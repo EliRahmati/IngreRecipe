@@ -2,8 +2,13 @@ import React from 'react';
 import {AppBar, Toolbar, Typography, Button, Container, Box} from '@mui/material';
 import { Link } from 'react-router-dom';
 import Search from "./Search";
+import useAppContext from "./index";
+
+
 
 const Home = () => {
+    const {user} = useAppContext()
+    const {token, username} = user
   return (
     <Box>
       <Box>
@@ -12,15 +17,18 @@ const Home = () => {
             <Typography variant="h6" component={Link} to="/" sx={{ flexGrow:1, textDecoration: 'none', color: 'white' }}>
               Share and Find Recipes
             </Typography>
-                <Button component={Link} to="/my-recipes" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
+                {token && <Button component={Link} to="/my-recipes" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
                     My Recipes
-                </Button>
+                </Button>}
                 <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
                       Login
                </Button>
-                <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
+                {!token && <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
                       Register
-                </Button>
+                </Button>}
+               {token && <Typography variant="h6" component={Link} to="/" sx={{ textDecoration: 'none', color: 'white' }}>
+                   {`Hello ${username}`}
+            </Typography>}
           </Toolbar>
         </AppBar>
       </Box>

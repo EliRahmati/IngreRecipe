@@ -19,7 +19,8 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 function NewRecipe() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const {token} = useAppContext()
+    const {user} = useAppContext()
+    const {token} = user
     const [type, setType] = useState('');
     const [name, setName] = useState("");
     const [short, setShort] = useState("");
