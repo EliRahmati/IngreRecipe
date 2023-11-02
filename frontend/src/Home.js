@@ -7,8 +7,12 @@ import useAppContext from "./index";
 
 
 const Home = () => {
-    const {user} = useAppContext()
+    const {user, updateUser} = useAppContext()
     const {token, username} = user
+
+    const handleLogoutClick = () => {
+        updateUser({username: '', token: ''})
+    }
   return (
     <Box>
       <Box>
@@ -20,9 +24,12 @@ const Home = () => {
                 {token && <Button component={Link} to="/my-recipes" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
                     My Recipes
                 </Button>}
-                <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
+                {!token && <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
                       Login
-               </Button>
+               </Button>}
+               {token && <Button onClick={handleLogoutClick} color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
+                      Logout
+               </Button>}
                 {!token && <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
                       Register
                 </Button>}
