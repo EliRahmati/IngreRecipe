@@ -30,8 +30,3 @@ To run IngreRecipe on your local machine, follow these steps:
 
 ```bash
 git clone https://github.com/yourusername/RecipeFusion.git
-
-
-# Recources
-https://www.w3schools.com/css/
-
