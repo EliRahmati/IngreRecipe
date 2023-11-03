@@ -29,5 +29,6 @@ To run IngreRecipe on your local machine, follow these steps:
 git clone https://github.com/yourusername/RecipeFusion.git
 
 
-## Recources
+# Recources
 https://www.w3schools.com/css/
+
