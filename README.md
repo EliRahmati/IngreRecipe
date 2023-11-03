@@ -3,6 +3,9 @@ IngreRecipe: Discover recipes with available ingredients, your kitchen companion
 
 # IngreRecipe
 
+# Recources
+https://www.w3schools.com/css/
+
 ## Overview
 
 IngreRecipe is a dynamic and user-friendly food recipe application that helps you create delicious meals with the ingredients you have on hand. Say goodbye to the hassle of browsing through endless recipe websites; with RecipeFusion, you can enter your ingredients and discover exciting recipes at your fingertips.
