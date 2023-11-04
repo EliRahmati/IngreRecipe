@@ -29,6 +29,7 @@ function NewRecipe() {
     const [error, setError] = useState(false)
     const recipe_id = id?.slice(1)
 
+
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})
         navigate('/')
@@ -68,9 +69,9 @@ function NewRecipe() {
 
     const handleEditClick = () => {
         console.log(recipe_id)
-            fetch(`http://localhost:8000/me/recipe/${recipe_id}`, {
+            fetch(`http://localhost:8000/recipe/${recipe_id}`, {
                 method: "PUT",
-                headers: {'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}`},
+                headers: {'accept': 'application/json', 'Content-Type': 'application/json'},
                 body:JSON.stringify(
                     {name: name,
                           short: short,
@@ -98,9 +99,9 @@ function NewRecipe() {
     useEffect(() => {
       console.log(token)
       if (recipe_id) {
-          fetch(`http://localhost:8000/me/recipe/${recipe_id}`, {
+          fetch(`http://localhost:8000/recipe/${recipe_id}`, {
             method: "GET",
-            headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
+            headers: {'accept': 'application/json'}
         })
           .then((res) => {
               return res.json()
@@ -152,9 +153,9 @@ function NewRecipe() {
                     </AppBar>
                   <CardContent>
                       <Box sx={{display: "grid"}}>
-                          <TextField value={name} onChange={(event) => setName(event.target.value)}
-                              id="outlined-basic" label="Food Name"
-                                     variant="outlined" margin={'normal'} sx={{maxWidth: 300}}/>
+                          <Typography>
+                              {name}
+                          </Typography>
 
                           <FormControl sx={{maxWidth: 300}}>
                               <InputLabel id="demo-simple-select-label">Type</InputLabel>

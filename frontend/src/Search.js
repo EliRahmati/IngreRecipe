@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
-import {Typography, Box, Paper, Button, TextField, Card, CardContent, CardActions} from '@mui/material';
+import {
+    Typography,
+    Box,
+    Paper,
+    Button,
+    TextField,
+    Card,
+    CardContent,
+    CardActions,
+    Toolbar,
+    AppBar
+} from '@mui/material';
 import useAppContext from "./index";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function Search({published}) {
-    const {user} = useAppContext()
-    const {token} = user
+    const navigate = useNavigate();
+    const {user, updateUser} = useAppContext()
+    const {token, username} = user
     const [recipes, setRecipes] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [refresh, setRefresh] = useState(false);
-    const [type, setType] = useState('');
-    const [name, setName] = useState("");
-    const [short, setShort] = useState("");
-    const [description, setDescription] = useState("");
 
-    console.log(token)
+    const handleLogoutClick = () => {
+        updateUser({username: '', token: ''})
+        navigate('/')
+    }
+
     const handleDeleteClick = (id) => {
             fetch(`http://localhost:8000/me/recipe/${id}`, {
                 method: "DELETE",
@@ -74,27 +86,38 @@ function Search({published}) {
 
         return (
             <div>
-                <Paper variant="outlined" style={{ background: "lightgray" }}>
-                    <Box display={'flex'}>
-                        <RestaurantIcon style={{fontSize: '3em', marginRight: 25}}/>
-                        <Typography variant="h3" component="h3">
-                            List of Recipes
-                        </Typography>
-                        <Button component={Link} to="/new-recipe" color="primary" variant="contained" sx={{margin: 2}}>
-                            Create New Recipe
-                        </Button>
-                        <Button component={Link} to="/" color="primary" variant="contained" sx={{margin: 2}}>
+                <AppBar position="static" sx={{backgroundColor: 'saddlebrown'}}>
+                  <Toolbar sx={{ display: 'flex'}}>
+                      <RestaurantIcon style={{fontSize: '3em', marginRight: 25, textDecoration: 'none', color: 'white'}}/>
+                    <Typography variant="h6" component={Link} to="/" sx={{ flexGrow:1, textDecoration: 'none', color: 'white' }}>
+                      Share and Find Recipes
+                    </Typography>
+                      <Button component={Link} to="/" color="primary"  sx={{margin: 2, textDecoration: 'none', color: 'white'}}>
                             Home
                         </Button>
-                    </Box>
-                </Paper>
+                        {!token && <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
+                              Login
+                       </Button>}
+                       {token && <Button onClick={handleLogoutClick} color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
+                              Logout
+                       </Button>}
+                        {!token && <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
+                              Register
+                        </Button>}
+                       {token && <Typography variant="h6" component={Link} to="/" sx={{ textDecoration: 'none', color: 'white' }}>
+                           {`Hello ${username}`}
+                    </Typography>}
+                  </Toolbar>
+                </AppBar>
                 <Paper variant="outlined">
                     <Box display={'flex'}>
                         <TextField onChange={(event) => {
                             setSearchInput(event.target.value)
                         }} value={searchInput} label="Search" variant="outlined" style={{width: 500, margin: 5}} />
-                        <Button variant="contained" style={{margin: 5}}>Previous page</Button>
-                        <Button variant="contained" style={{margin: 5}}>Next page</Button>
+                        {!published && <Button variant={'contained'} component={Link} to="/new-recipe" sx={{margin: 2 ,textDecoration: 'none',
+                            color: 'white', backgroundColor: 'saddlebrown'}}>
+                            Create New Recipe
+                        </Button>}
                     </Box>
                 </Paper>
                 {recipes.filter(uni => uni.name.toLowerCase().startsWith(searchInput)).map((row, index) => (
@@ -122,7 +145,9 @@ function Search({published}) {
                                     </Box>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">See Recipe</Button>
+                                    <Button component={Link} to={`/recipe/:${row.id}`} color="primary">
+                                        See Recipe
+                                    </Button>
                                     {!published && <Button onClick={(event) => handleDeleteClick(row.id)} size="small">Delete</Button>}
                                     {!published && <Button component={Link} to={`/edit-recipe/:${row.id}`} color="primary">
                                         Edit

@@ -6,14 +6,17 @@ import RegisterLogin from "./RegisterLogin";
 import {BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Home";
 import NewRecipe from "./NewRecipe";
+import Recipe from "./Recipe";
 
 
 
 const AppContext = createContext();
 const AppProvider = ({ children }) => {
-  const [user, setUser] = useState({username: '', token: ''});
+  const [user, setUser] = useState({username: localStorage.getItem('username'), token: localStorage.getItem('token')});
 
   const updateUser = (newValue) => {
+      localStorage.setItem('token', newValue.token)
+      localStorage.setItem('username', newValue.username)
     setUser(newValue);
   };
 
@@ -43,6 +46,7 @@ function App() {
                  <Route exact path="/my-recipes" element={<Search published={false}/>}/>
                  <Route exact path="/new-recipe" element={<NewRecipe/>}/>
                  <Route exact path="/edit-recipe/:id" element={<NewRecipe/>}/>
+                 <Route exact path="/recipe/:id" element={<Recipe/>}/>
              </Routes>
           </BrowserRouter>
        </AppProvider>

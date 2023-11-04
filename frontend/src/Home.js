@@ -1,17 +1,20 @@
-import React from 'react';
-import {AppBar, Toolbar, Typography, Button, Container, Box} from '@mui/material';
-import { Link } from 'react-router-dom';
+import React, {useState} from 'react';
+import {AppBar, Toolbar, Typography, Button, Container, Box, TextField} from '@mui/material';
+import {Link, useNavigate} from 'react-router-dom';
 import Search from "./Search";
 import useAppContext from "./index";
 
 
 
 const Home = () => {
+    const navigate = useNavigate();
     const {user, updateUser} = useAppContext()
     const {token, username} = user
+    const [searchInput, setSearchInput] = useState('');
 
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})
+        navigate('/')
     }
   return (
     <Box>
@@ -62,6 +65,12 @@ const Home = () => {
               Start exploring now and let the magic of cooking come alive in your own kitchen.
           </Typography>
       </Box>
+        <Box display={'flex'} justifyContent={'center'}>
+            <Button variant={'contained'} component={Link} to="/recipes" sx={{width:300, margin: 20,textDecoration: 'none',
+                            color: 'white', backgroundColor: 'darkolivegreen'}}>
+                            Search published recipes
+            </Button>
+        </Box>
     </Box>
   );
 };

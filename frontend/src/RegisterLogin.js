@@ -1,23 +1,41 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import SchoolIcon from '@mui/icons-material/School';
-import {Typography, Box, Paper, Button, TextField, Card, CardContent, CardActions} from '@mui/material';
+import {
+    Typography,
+    Box,
+    Paper,
+    Button,
+    TextField,
+    Card,
+    CardContent,
+    CardActions,
+    AppBar,
+    Toolbar
+} from '@mui/material';
 import {display} from "@mui/system";
 import useAppContext from "./index";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function RegisterLogin() {
     const navigate = useNavigate();
-    const {updateUser} = useAppContext()
-    const [username, setUsername] = useState("");
-    const [fullname, setFullname] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const {user, updateUser} = useAppContext()
+    const [username, setUsername] = useState('');
+    const [fullname, setFullname] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(false)
-    const [loginUsername, setLoginUsername] = useState("");
-    const [loginPassword, setLoginPassword] = useState("");
+    const [loginUsername, setLoginUsername] = useState('');
+    const [loginPassword, setLoginPassword] = useState('');
 
-    const handleLoginClick = () => {
+    const {token} = user
+    const [clickCount, setClickCount] = useState(0);
+
+    const handleLogoutClick = () => {
+        updateUser({username: '', token: ''})
+    }
+
+    const handleLogin = () => {
         fetch("http://localhost:8000/token", {
             method: "POST",
             headers: {'accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'},
@@ -44,6 +62,16 @@ function RegisterLogin() {
           });
     }
 
+  //   const handleLogin = () => {
+  //   // Handle login logic here
+  //   console.log('Logging in with username:', username, 'and password:', password);
+  // };
+    const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+        handleLogin()
+    }
+  };
+
     const handleRegisterClick = () => {
         fetch("http://localhost:8000/users", {
             method: "POST",
@@ -69,8 +97,19 @@ function RegisterLogin() {
 
 
         return (
-            <Box sx={{justifyContent: 'center', display: 'flex' }}>
+            <Box>
+                <AppBar position="static" sx={{backgroundColor: 'saddlebrown'}}>
+                      <Toolbar sx={{ display: 'flex'}}>
+                          <Typography variant="h6" component={Link} to="/" sx={{ flexGrow:1, textDecoration: 'none', color: 'white' }}>
+                          Login in your account
+                        </Typography>
+                        <Button component={Link} to="/" sx={{ textDecoration: 'none', color: 'white' }}>
+                          Home
+                        </Button>
+                      </Toolbar>
+                    </AppBar>
 
+                <Box sx={{justifyContent: 'center', display: 'flex' }}>
                 <Card sx={{ minWidth: 275, width: 500, margin: 10, boxShadow: 12 }}>
                   <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -109,19 +148,34 @@ function RegisterLogin() {
                                      id="outlined-basic" label="Username"
                                      variant="outlined" margin={'normal'}/>
                           <TextField value={loginPassword} onChange={(event) => setLoginPassword(event.target.value)}
+                                     onKeyDown={handleKeyPress}
                                      id="outlined-basic" label="Password"
                                      variant="outlined" margin={'normal'}
                           type="password"/>
                       </Box>
                   </CardContent>
                   <CardActions>
-                    <Button onClick={handleLoginClick} variant={"outlined"} size="small">Login</Button>
+                      {/*<input*/}
+                      {/*  type="text"*/}
+                      {/*  placeholder="Username"*/}
+                      {/*  value={username}*/}
+                      {/*  onChange={(e) => setUsername(e.target.value)}*/}
+                      {/*/>*/}
+                      {/*<input*/}
+                      {/*  type="password"*/}
+                      {/*  placeholder="Password"*/}
+                      {/*  value={password}*/}
+                      {/*  onChange={(e) => setPassword(e.target.value)}*/}
+                      {/*  onKeyDown={handleKeyPressEnter} // Trigger login on Enter key press*/}
+                      {/*/>*/}
+                    <Button onClick={handleLogin} variant={"outlined"} size="small">Login</Button>
                   </CardActions>
                     {error && <Typography sx={{margin: 2}} color={"red"}>
                           Invalid credential
                       </Typography>}
                 </Card>
 
+            </Box>
             </Box>
         );
 }
