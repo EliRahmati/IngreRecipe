@@ -2,7 +2,8 @@ import React, {createContext, useContext, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import Search from "./Search"
-import RegisterLogin from "./RegisterLogin";
+import Login from "./Login";
+import Register from "./Register";
 import {BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Home";
 import NewRecipe from "./NewRecipe";
@@ -41,7 +42,8 @@ function App() {
           <BrowserRouter>
              <Routes>
                  <Route exact path="/" element={<Home/>}/>
-                 <Route exact path="/login" element={<RegisterLogin/>}/>
+                 <Route exact path="/login" element={<Login/>}/>
+                 <Route exact path="/register" element={<Register/>}/>
                  <Route exact path="/recipes" element={<Search published={true}/>}/>
                  <Route exact path="/my-recipes" element={<Search published={false}/>}/>
                  <Route exact path="/new-recipe" element={<NewRecipe/>}/>

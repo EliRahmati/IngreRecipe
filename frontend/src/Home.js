@@ -33,9 +33,6 @@ const Home = () => {
                {token && <Button onClick={handleLogoutClick} color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
                       Logout
                </Button>}
-                {!token && <Button component={Link} to="/login" color="primary" sx={{ textDecoration: 'none', color: 'white'}}>
-                      Register
-                </Button>}
                {token && <Typography variant="h6" component={Link} to="/" sx={{ textDecoration: 'none', color: 'white' }}>
                    {`Hello ${username}`}
             </Typography>}
@@ -50,11 +47,11 @@ const Home = () => {
               width: '100%'
             }}
             alt="The house from the offer."
-            src="https://www.shutterstock.com/image-photo/female-hands-holding-bowl-eating-260nw-2364437979.jpg"
+            src="https://w.wallhaven.cc/full/x6/wallhaven-x6eed3.jpg"
           />
       </Box>
       <Box>
-          <Typography variant={'h6'} sx={{ flexGrow:2, textDecoration: 'none', color: 'saddlebrown', fontWeight:600, width: '99%', fontSize: 'h6.fontSize'}}>
+          <Typography variant={'h6'} sx={{ flexGrow:2, textDecoration: 'none', color: 'saddlebrown', margin: 40, marginTop: 5, marginBottom: 5}}>
               Welcome to our innovative culinary platform, where the world of cooking is at your fingertips.
               At IngreRecip, we've simplified the art of meal preparation by offering a user-friendly
               interface that allows you to input the ingredients you have on hand and instantly receive

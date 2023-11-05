@@ -3,7 +3,6 @@ import SchoolIcon from '@mui/icons-material/School';
 import {
     Typography,
     Box,
-    Paper,
     Button,
     TextField,
     Card,
@@ -12,65 +11,17 @@ import {
     AppBar,
     Toolbar
 } from '@mui/material';
-import {display} from "@mui/system";
 import useAppContext from "./index";
 import {Link, useNavigate} from "react-router-dom";
 
-function RegisterLogin() {
+function Register() {
     const navigate = useNavigate();
-    const {user, updateUser} = useAppContext()
     const [username, setUsername] = useState('');
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(false)
-    const [loginUsername, setLoginUsername] = useState('');
-    const [loginPassword, setLoginPassword] = useState('');
-
-    const {token} = user
-    const [clickCount, setClickCount] = useState(0);
-
-    const handleLogoutClick = () => {
-        updateUser({username: '', token: ''})
-    }
-
-    const handleLogin = () => {
-        fetch("http://localhost:8000/token", {
-            method: "POST",
-            headers: {'accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'},
-            body:JSON.stringify(
-                `grant_type=&username=${loginUsername}&password=${loginPassword}&scope=&client_id=&client_secret=`
-            )
-        })
-          .then((res) => {
-              return res.json()
-          })
-          .then((result) => {
-              if (result.access_token) {
-                  setError(false)
-                  updateUser({username: loginUsername, token: result.access_token})
-                  navigate('/')
-              } else {
-                  setError(true)
-                  updateUser({username: '', token: ''})
-              }
-          })
-          .catch((error) => {
-              setError(true)
-            console.log(error);
-          });
-    }
-
-  //   const handleLogin = () => {
-  //   // Handle login logic here
-  //   console.log('Logging in with username:', username, 'and password:', password);
-  // };
-    const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-        handleLogin()
-    }
-  };
 
     const handleRegisterClick = () => {
         fetch("http://localhost:8000/users", {
@@ -84,14 +35,16 @@ function RegisterLogin() {
             )
         })
           .then((res) => {
-              return res.json()
-          })
-          .then((result) => {
-              console.log(result)
+              if (res.status === 200) {
+                  setError(false)
+                  navigate('/login')
+              }
+              else {
+                  setError(true)
+              }
           })
           .catch((error) => {
               setError(true)
-            console.log(error);
           });
     }
 
@@ -134,51 +87,16 @@ function RegisterLogin() {
                       </Box>
                   </CardContent>
                   <CardActions>
-                    <Button onClick={handleRegisterClick} variant={"outlined"} size="small">Register</Button>
-                  </CardActions>
-                </Card>
-
-                <Card sx={{ minWidth: 275, width: 500, margin: 10, boxShadow: 12 }}>
-                  <CardContent>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      Login
-                    </Typography>
-                      <Box sx={{display: "grid"}}>
-                          <TextField value={loginUsername} onChange={(event) => setLoginUsername(event.target.value)}
-                                     id="outlined-basic" label="Username"
-                                     variant="outlined" margin={'normal'}/>
-                          <TextField value={loginPassword} onChange={(event) => setLoginPassword(event.target.value)}
-                                     onKeyDown={handleKeyPress}
-                                     id="outlined-basic" label="Password"
-                                     variant="outlined" margin={'normal'}
-                          type="password"/>
-                      </Box>
-                  </CardContent>
-                  <CardActions>
-                      {/*<input*/}
-                      {/*  type="text"*/}
-                      {/*  placeholder="Username"*/}
-                      {/*  value={username}*/}
-                      {/*  onChange={(e) => setUsername(e.target.value)}*/}
-                      {/*/>*/}
-                      {/*<input*/}
-                      {/*  type="password"*/}
-                      {/*  placeholder="Password"*/}
-                      {/*  value={password}*/}
-                      {/*  onChange={(e) => setPassword(e.target.value)}*/}
-                      {/*  onKeyDown={handleKeyPressEnter} // Trigger login on Enter key press*/}
-                      {/*/>*/}
-                    <Button onClick={handleLogin} variant={"outlined"} size="small">Login</Button>
+                    <Button disabled={password !== confirmPassword || !username || !fullname || !email} onClick={handleRegisterClick} variant={"outlined"} size="small">Register</Button>
                   </CardActions>
                     {error && <Typography sx={{margin: 2}} color={"red"}>
-                          Invalid credential
+                          Something went wrong!
                       </Typography>}
                 </Card>
-
             </Box>
             </Box>
         );
 }
 
 
-export default RegisterLogin
+export default Register
