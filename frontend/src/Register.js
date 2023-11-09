@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import SchoolIcon from '@mui/icons-material/School';
+import {config} from "./Params";
 import {
     Typography,
     Box,
@@ -24,7 +24,7 @@ function Register() {
     const [error, setError] = useState(false)
 
     const handleRegisterClick = () => {
-        fetch("http://localhost:8000/users", {
+        fetch(`${config.baseUrl}/users`, {
             method: "POST",
             headers: {'accept': 'application/json', 'Content-Type': 'application/json'},
             body:JSON.stringify(

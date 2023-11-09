@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import useAppContext from "./index";
 import {Link, useNavigate} from "react-router-dom";
+import {config} from "./Params";
 
 function Search({published}) {
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ function Search({published}) {
     }
 
     const handleDeleteClick = (id) => {
-            fetch(`http://localhost:8000/me/recipe/${id}`, {
+            fetch(`${config.baseUrl}/me/recipe/${id}`, {
                 method: "DELETE",
                 headers: {'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}`}
             })
@@ -53,7 +54,7 @@ function Search({published}) {
   useEffect(() => {
       console.log(token)
       if (published) {
-          fetch("http://localhost:8000/recipes")
+          fetch(`${config.baseUrl}/recipes`)
           .then((res) => {
               return res.json()
           })
@@ -64,7 +65,7 @@ function Search({published}) {
             console.log(error);
           });
       } else {
-          fetch("http://localhost:8000/me/recipes", {
+          fetch(`${config.baseUrl}/me/recipes`, {
             method: "GET",
             headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
         })

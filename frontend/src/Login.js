@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import useAppContext from "./index";
 import {Link, useNavigate} from "react-router-dom";
+import {config} from "./Params";
 
 function Login() {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ function Login() {
     const [loginPassword, setLoginPassword] = useState('');
 
     const handleLogin = () => {
-        fetch("http://localhost:8000/token", {
+        fetch(`${config.baseUrl}/token`, {
             method: "POST",
             headers: {'accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'},
             body:JSON.stringify(

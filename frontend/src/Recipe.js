@@ -1,18 +1,11 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import SchoolIcon from '@mui/icons-material/School';
+import {config} from "./Params";
 import {
     Typography,
     Box,
-    Paper,
     Button,
-    TextField,
-    Card,
-    CardContent,
-    CardActions,
-    FormControl,
-    InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Toolbar, AppBar
+    Toolbar, AppBar
 } from '@mui/material';
-import {display} from "@mui/system";
 import useAppContext from "./index";
 import {Link, useNavigate, useParams} from "react-router-dom";
 
@@ -38,7 +31,7 @@ function NewRecipe() {
     useEffect(() => {
       if (recipe_id) {
           if (token) {
-              fetch(`http://localhost:8000/me/recipe/${recipe_id}`, {
+              fetch(`${config.baseUrl}/me/recipe/${recipe_id}`, {
                     method: "GET",
                     headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
                 })
@@ -57,7 +50,7 @@ function NewRecipe() {
                     console.log(error);
                   });
           } else {
-              fetch(`http://localhost:8000/recipe/${recipe_id}`, {
+              fetch(`${config.baseUrl}/recipe/${recipe_id}`, {
                     method: "GET",
                     headers: {'accept': 'application/json'}
                 })
