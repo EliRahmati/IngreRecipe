@@ -10,13 +10,14 @@ from uuid import UUID, uuid4
 from typing import Optional, List
 from sqlalchemy.dialects.postgresql import UUID as alchemyUUID
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
-
-SECRET_KEY = "923900b49483a291e85f210d13cd17aff88ca79a73780e6da9121de89626cf8c"
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 DATABASE_URL = "postgresql://postgres:example@localhost:5432/postgres"
+# DATABASE_URL = "postgresql://elham:example123@recipedb.cenjwhvbxjol.eu-north-1.rds.amazonaws.com:5432/recipedb"
 
 # SQLAlchemy setup
 engine = create_engine(DATABASE_URL)
