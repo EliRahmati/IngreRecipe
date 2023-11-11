@@ -16,8 +16,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-DATABASE_URL = "postgresql://postgres:example@localhost:5432/postgres"
-# DATABASE_URL = "postgresql://elham:example123@recipedb.cenjwhvbxjol.eu-north-1.rds.amazonaws.com:5432/recipedb"
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+URL1 = os.getenv("URL1")
+URL2 = os.getenv("URL2")
+URL3 = os.getenv("URL3")
 
 # SQLAlchemy setup
 engine = create_engine(DATABASE_URL)
@@ -55,8 +58,10 @@ app = FastAPI()
 # Configure CORS
 origins = [
     "http://localhost",
-    "http://localhost:3000",  # Add the origin that corresponds to your frontend application
-    # You can add more origins as needed.
+    "http://localhost:3000",
+    URL1,
+    URL2,
+    URL3
 ]
 
 app.add_middleware(
