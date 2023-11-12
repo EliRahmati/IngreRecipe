@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npm build
+npm install
