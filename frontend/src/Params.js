@@ -1,4 +1,4 @@
 export const config = {
-  baseUrl: 'http://localhost:8000'
+  baseUrl: process.env.API_URL || 'http://localhost:8000'
 };
 
