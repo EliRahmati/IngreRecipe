@@ -1,4 +1,4 @@
 export const config = {
-  baseUrl: process.env.API_URL || 'http://localhost:8000'
+  baseUrl: 'https://ingrerecipe-backend.onrender.com'
 };
 
