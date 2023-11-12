@@ -10,7 +10,6 @@ const Home = () => {
     const navigate = useNavigate();
     const {user, updateUser} = useAppContext()
     const {token, username} = user
-    const [searchInput, setSearchInput] = useState('');
 
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})

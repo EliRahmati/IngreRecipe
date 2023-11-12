@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import SchoolIcon from '@mui/icons-material/School';
+import {config} from "./Params";
 import {
     Typography,
     Box,
@@ -12,7 +12,6 @@ import {
     FormControl,
     InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Toolbar, AppBar
 } from '@mui/material';
-import {display} from "@mui/system";
 import useAppContext from "./index";
 import {Link, useNavigate, useParams} from "react-router-dom";
 
@@ -36,7 +35,7 @@ function NewRecipe() {
 
 
     const handleRecipeClick = () => {
-        fetch("http://localhost:8000/me/recipes", {
+        fetch(`${config.baseUrl}/me/recipes`, {
             method: "POST",
             headers: {'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}`},
             body:JSON.stringify(
@@ -68,7 +67,7 @@ function NewRecipe() {
 
     const handleEditClick = () => {
         console.log(recipe_id)
-            fetch(`http://localhost:8000/me/recipe/${recipe_id}`, {
+            fetch(`${config.baseUrl}/me/recipe/${recipe_id}`, {
                 method: "PUT",
                 headers: {'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}`},
                 body:JSON.stringify(
@@ -98,7 +97,7 @@ function NewRecipe() {
     useEffect(() => {
       console.log(token)
       if (recipe_id) {
-          fetch(`http://localhost:8000/me/recipe/${recipe_id}`, {
+          fetch(`${config.baseUrl}/me/recipe/${recipe_id}`, {
             method: "GET",
             headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
         })
