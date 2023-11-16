@@ -3,8 +3,6 @@ IngreRecipe: Discover recipes with available ingredients, your kitchen companion
 
 # IngreRecipe
 
-# Recources
-https://www.w3schools.com/css/
 
 ## Overview
 
@@ -27,6 +25,11 @@ IngreRecipe is a dynamic and user-friendly food recipe application that helps yo
 To run IngreRecipe on your local machine, follow these steps:
 
 1. Clone the repository to your local environment:
+   
 
 ```bash
 git clone https://github.com/yourusername/RecipeFusion.git
+```
+# Recources
+https://www.w3schools.com/css/
+https://mui.com/system/getting-started/
