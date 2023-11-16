@@ -80,7 +80,7 @@ To deploy we have used [render.com](render.com).
 Render.com offers fully managed hosted PostgreSQL with internal and external connectivity, multiple storage and memory options, and automated daily backups.
 
 ### Web Service (Backend)
-In render.com we can create an instance of a web-service. The web-service is connected to this repository. It will be re-launched after any commit on the backend folder of this repository. The render.com web-service is running with an SSL support. You can see the API running on render.com here [https://ingrerecipe-backend.onrender.com](https://ingrerecipe-backend.onrender.com).
+In render.com we can create an instance of a web-service. The web-service is connected to this repository. It will be re-launched after any commit on the backend folder of this repository. The render.com web-service is running with an SSL support. You can see the API running on render.com here [https://ingrerecipe-backend.onrender.com/docs](https://ingrerecipe-backend.onrender.com/docs).
 
 ### STATIC SITE (Frontend)
 In render.com we can create an instance of a Static-Site which is also wiith SSL support. The Static-Site needs a build of the frontend. To build the frontend one can use the following command
