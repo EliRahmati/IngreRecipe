@@ -89,7 +89,7 @@ In render.com we can create an instance of a Static-Site which is also wiith SSL
 sh ./build.sh
 ```
 
-It should be noted that we have used react-router-dom library for frontend routes and this causes some deficaulties in deployment. We define "Redirect and Rewrite Rules" in render.com to redirect all routes "/*" to "/index.html" with "Rewrite" action. It will allow the react-router-dom library manages the routes internally. The latest version of the website is running on [https://ingrerecipe.onrender.com/](https://ingrerecipe.onrender.com)
+It should be noted that we have used react-router-dom library for frontend routes and this causes some difficulties in deployment. We define "Redirect and Rewrite Rules" in render.com to redirect all routes "/*" to "/index.html" with "Rewrite" action. It will allow the react-router-dom library manages the routes internally. The latest version of the website is running on [https://ingrerecipe.onrender.com/](https://ingrerecipe.onrender.com)
 
 
 # Recources
