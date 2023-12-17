@@ -22,6 +22,7 @@ function Register() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(false)
+    const [emailError, setEmailError] = useState(false);
 
     const handleRegisterClick = () => {
         fetch(`${config.baseUrl}/users`, {
@@ -47,6 +48,15 @@ function Register() {
               setError(true)
           });
     }
+
+    const handleEmailChange = (e) => {
+     const newEmail = e.target.value;
+     setEmail(newEmail);
+     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Check if the entered email is valid
+    setEmailError(!emailRegex.test(newEmail));
+  };
 
 
         return (
@@ -75,7 +85,7 @@ function Register() {
                           <TextField value={fullname} onChange={(event) => setFullname(event.target.value)}
                               id="outlined-basic" label="fullname"
                                      variant="outlined" margin={'normal'}/>
-                          <TextField value={email} onChange={(event) => setEmail(event.target.value)}
+                          <TextField color={emailError ? 'error' : 'primary'}  value={email} onChange={handleEmailChange}
                               id="outlined-basic" label="email"
                                      variant="outlined" margin={'normal'}/>
                           <TextField value={password} onChange={(event) => setPassword(event.target.value)}
