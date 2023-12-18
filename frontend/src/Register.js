@@ -97,7 +97,7 @@ function Register() {
                       </Box>
                   </CardContent>
                   <CardActions>
-                    <Button disabled={password !== confirmPassword || !username || !fullname || !email} onClick={handleRegisterClick} variant={"outlined"} size="small">Register</Button>
+                    <Button disabled={password !== confirmPassword || !username || !fullname || !email || !!emailError} onClick={handleRegisterClick} variant={"outlined"} size="small">Register</Button>
                   </CardActions>
                     {error && <Typography sx={{margin: 2}} color={"red"}>
                           Something went wrong!
