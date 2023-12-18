@@ -9,8 +9,10 @@ import {
     CardContent,
     CardActions,
     AppBar,
-    Toolbar
+    Toolbar,
+    CircularProgress
 } from '@mui/material';
+
 import useAppContext from "./index";
 import {Link, useNavigate} from "react-router-dom";
 
@@ -23,8 +25,10 @@ function Register() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(false)
     const [emailError, setEmailError] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleRegisterClick = () => {
+        setLoading(true);
         fetch(`${config.baseUrl}/users`, {
             method: "POST",
             headers: {'accept': 'application/json', 'Content-Type': 'application/json'},
@@ -36,6 +40,7 @@ function Register() {
             )
         })
           .then((res) => {
+              setLoading(false);
               if (res.status === 200) {
                   setError(false)
                   navigate('/login')
@@ -45,6 +50,7 @@ function Register() {
               }
           })
           .catch((error) => {
+              setLoading(false);
               setError(true)
           });
     }
@@ -97,7 +103,14 @@ function Register() {
                       </Box>
                   </CardContent>
                   <CardActions>
-                    <Button disabled={password !== confirmPassword || !username || !fullname || !email || !!emailError} onClick={handleRegisterClick} variant={"outlined"} size="small">Register</Button>
+                    <Button disabled={password !== confirmPassword || !username || !fullname || !email || !!emailError} onClick={handleRegisterClick} variant={"outlined"} size="small">
+                        {loading ? <Box display={'inline-flex'}>
+                            <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
+                                Please wait, it may take some time.
+                            </Typography>
+                            <CircularProgress  />
+                        </Box> : "Register"}
+                    </Button>
                   </CardActions>
                     {error && <Typography sx={{margin: 2}} color={"red"}>
                           Something went wrong!
