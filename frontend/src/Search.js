@@ -10,7 +10,7 @@ import {
     CardContent,
     CardActions,
     Toolbar,
-    AppBar
+    AppBar, CircularProgress
 } from '@mui/material';
 import useAppContext from "./index";
 import {Link, useNavigate} from "react-router-dom";
@@ -23,6 +23,7 @@ function Search({published}) {
     const [recipes, setRecipes] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [refresh, setRefresh] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})
@@ -53,15 +54,18 @@ function Search({published}) {
 
   useEffect(() => {
       console.log(token)
+      setLoading(true);
       if (published) {
           fetch(`${config.baseUrl}/recipes`)
           .then((res) => {
               return res.json()
           })
           .then((result) => {
+              setLoading(false);
             setRecipes(result);
           })
           .catch((error) => {
+              setLoading(false);
             console.log(error);
           });
       } else {
@@ -76,9 +80,11 @@ function Search({published}) {
                   return []
           })
           .then((result) => {
+              setLoading(false);
               setRecipes(result)
           })
           .catch((error) => {
+              setLoading(false);
             console.log(error);
           });
       }
@@ -121,6 +127,12 @@ function Search({published}) {
                         </Button>}
                     </Box>
                 </Paper>
+                {loading && <Box display={'inline-flex'}>
+                            <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
+                                Please wait, it may take some time.
+                            </Typography>
+                            <CircularProgress  />
+                        </Box>}
                 {recipes.filter(uni => uni.name.toLowerCase().startsWith(searchInput)).map((row, index) => (
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Card sx={{ width: "50%", margin: 1}}>
