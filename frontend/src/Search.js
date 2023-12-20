@@ -24,6 +24,8 @@ function Search({published}) {
     const [searchInput, setSearchInput] = useState('');
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [deletingId, setDeletingId] = useState('');
+
 
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})
@@ -31,6 +33,7 @@ function Search({published}) {
     }
 
     const handleDeleteClick = (id) => {
+        setDeletingId(id);
             fetch(`${config.baseUrl}/me/recipe/${id}`, {
                 method: "DELETE",
                 headers: {'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}`}
@@ -39,6 +42,7 @@ function Search({published}) {
                   return res.json()
               })
               .then((result) => {
+                  setDeletingId('');
                   if (result.message === "Item deleted") {
                                         console.log(result)
                      setRefresh(value => !value);
@@ -47,6 +51,7 @@ function Search({published}) {
                   }
               })
               .catch((error) => {
+                  setDeletingId('');
                 console.log(error);
               });
         }
@@ -161,7 +166,14 @@ function Search({published}) {
                                     <Button component={Link} to={`/recipe/:${row.id}`} color="primary">
                                         See Recipe
                                     </Button>
-                                    {!published && <Button onClick={(event) => handleDeleteClick(row.id)} size="small">Delete</Button>}
+                                    {!published && <Button onClick={(event) => handleDeleteClick(row.id)} size="small">
+                                        {deletingId && deletingId === row.id ? <Box display={'inline-flex'}>
+                                            <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
+                                                Please wait ...
+                                            </Typography>
+                                            <CircularProgress  />
+                                        </Box> : "Delete"}
+                                    </Button>}
                                     {!published && <Button component={Link} to={`/edit-recipe/:${row.id}`} color="primary">
                                         Edit
                                     </Button>}
