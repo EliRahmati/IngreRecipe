@@ -8,7 +8,7 @@ import {
     CardContent,
     CardActions,
     AppBar,
-    Toolbar
+    Toolbar, CircularProgress
 } from '@mui/material';
 import useAppContext from "./index";
 import {Link, useNavigate} from "react-router-dom";
@@ -20,8 +20,10 @@ function Login() {
     const [error, setError] = useState(false)
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = () => {
+        setLoading(true);
         fetch(`${config.baseUrl}/token`, {
             method: "POST",
             headers: {'accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'},
@@ -33,6 +35,7 @@ function Login() {
               return res.json()
           })
           .then((result) => {
+              setLoading(false);
               if (result.access_token) {
                   setError(false)
                   updateUser({username: loginUsername, token: result.access_token})
@@ -43,6 +46,7 @@ function Login() {
               }
           })
           .catch((error) => {
+              setLoading(false);
               setError(true)
             console.log(error);
           });
@@ -87,7 +91,14 @@ function Login() {
                       </Box>
                   </CardContent>
                   <CardActions>
-                    <Button onClick={handleLogin} variant={"contained"} size="small">Login</Button>
+                    <Button onClick={handleLogin} variant={"contained"} size="small">
+                        {loading ? <Box display={'inline-flex'}>
+                            <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
+                                Please wait, it may take some time.
+                            </Typography>
+                            <CircularProgress  color={"secondary"}/>
+                        </Box> : "Login"}
+                    </Button>
                       <Button variant={"outlined"} component={Link} to="/register" color="primary" size="small" sx={{marginLeft: 2}}>
                       Creat New Account
                 </Button>
