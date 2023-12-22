@@ -10,7 +10,7 @@ import {
     CardContent,
     CardActions,
     FormControl,
-    InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Toolbar, AppBar
+    InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Toolbar, AppBar, CircularProgress
 } from '@mui/material';
 import useAppContext from "./index";
 import {Link, useNavigate, useParams} from "react-router-dom";
@@ -27,6 +27,7 @@ function NewRecipe() {
     const [published, setPublished] = useState(false);
     const [error, setError] = useState(false)
     const recipe_id = id?.slice(1)
+    const [loading, setLoading] = useState(false);
 
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})
@@ -35,6 +36,7 @@ function NewRecipe() {
 
 
     const handleRecipeClick = () => {
+        setLoading(true);
         fetch(`${config.baseUrl}/me/recipes`, {
             method: "POST",
             headers: {'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}`},
@@ -51,6 +53,7 @@ function NewRecipe() {
               return res.json()
           })
           .then((result) => {
+              setLoading(false);
               if (result.id) {
                   setError(false)
                   navigate('/my-recipes')
@@ -60,6 +63,7 @@ function NewRecipe() {
               }
           })
           .catch((error) => {
+              setLoading(false);
               setError(true)
             console.log(error);
           });
@@ -97,6 +101,7 @@ function NewRecipe() {
     useEffect(() => {
       console.log(token)
       if (recipe_id) {
+          setLoading(true);
           fetch(`${config.baseUrl}/me/recipe/${recipe_id}`, {
             method: "GET",
             headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
@@ -105,6 +110,7 @@ function NewRecipe() {
               return res.json()
           })
           .then((result) => {
+              setLoading(false);
               setName(result.name);
               setType(result.type);
               setShort(result.short);
@@ -113,6 +119,7 @@ function NewRecipe() {
             console.log(result);
           })
           .catch((error) => {
+              setLoading(false);
             console.log(error);
           });
       }
@@ -150,6 +157,12 @@ function NewRecipe() {
                       </Toolbar>
                     </AppBar>
                   <CardContent>
+                      {loading && <Box display={'inline-flex'}>
+                            <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
+                                Please wait, it may take some time.
+                            </Typography>
+                            <CircularProgress  />
+                        </Box>}
                       <Box sx={{display: "grid"}}>
                           <TextField value={name} onChange={(event) => setName(event.target.value)}
                               id="outlined-basic" label="Food Name"
