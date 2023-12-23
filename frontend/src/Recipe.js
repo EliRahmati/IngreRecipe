@@ -4,7 +4,7 @@ import {
     Typography,
     Box,
     Button,
-    Toolbar, AppBar
+    Toolbar, AppBar, CircularProgress
 } from '@mui/material';
 import useAppContext from "./index";
 import {Link, useNavigate, useParams} from "react-router-dom";
@@ -21,6 +21,7 @@ function NewRecipe() {
     const [published, setPublished] = useState(false);
     const [error, setError] = useState(false)
     const recipe_id = id?.slice(1)
+    const [loading, setLoading] = useState(false)
 
 
     const handleLogoutClick = () => {
@@ -30,6 +31,7 @@ function NewRecipe() {
 
     useEffect(() => {
       if (recipe_id) {
+          setLoading(true);
           if (token) {
               fetch(`${config.baseUrl}/me/recipe/${recipe_id}`, {
                     method: "GET",
@@ -88,6 +90,12 @@ function NewRecipe() {
                 </Typography>}
               </Toolbar>
             </AppBar>
+            {loading && <Box display={'inline-flex'}>
+                            <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
+                                Please wait, it may take some time.
+                            </Typography>
+                            <CircularProgress  />
+                        </Box>}
             <Box display={'flex'} justifyContent={'center'} margin={20}>
                 <Typography variant={'h3'} color={'error'}>
                     You do not have access to this recipe!
@@ -100,7 +108,7 @@ function NewRecipe() {
                 <AppBar position="static" sx={{backgroundColor: 'saddlebrown'}}>
                   <Toolbar sx={{ display: 'flex'}}>
                     <Typography variant="h6" sx={{ flexGrow:1, textDecoration: 'none', color: 'white' }}>
-                      Published Recipes
+                      My Recipes
                     </Typography>
                     <Button component={Link} to="/" sx={{ textDecoration: 'none', color: 'white' }}>
                       Home
@@ -116,6 +124,12 @@ function NewRecipe() {
                     </Typography>}
                   </Toolbar>
                 </AppBar>
+                {!loading && <Box display={'inline-flex'}>
+                            <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
+                                Please wait, it may take some time.
+                            </Typography>
+                            <CircularProgress  />
+                        </Box>}
                 <Box margin={3}>
                     <Typography variant={'h2'} sx={{ width: '100%' }}>{`${name}`}</Typography>
                     <Typography variant={'h6'}>{`${type}`}</Typography>
