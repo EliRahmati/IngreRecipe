@@ -128,7 +128,7 @@ function NewRecipe() {
                     </Typography>}
                   </Toolbar>
                 </AppBar>
-                {!loading && <Box display={'inline-flex'}>
+                {loading && <Box display={'inline-flex'}>
                             <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
                                 Please wait, it may take some time.
                             </Typography>
