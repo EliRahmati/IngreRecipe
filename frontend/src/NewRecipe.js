@@ -28,6 +28,7 @@ function NewRecipe() {
     const [error, setError] = useState(false)
     const recipe_id = id?.slice(1)
     const [loading, setLoading] = useState(false);
+    const [editing, setEditing] = useState(false);
 
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})
@@ -71,6 +72,7 @@ function NewRecipe() {
 
     const handleEditClick = () => {
         console.log(recipe_id)
+            setEditing(true);
             fetch(`${config.baseUrl}/me/recipe/${recipe_id}`, {
                 method: "PUT",
                 headers: {'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}`},
@@ -87,12 +89,14 @@ function NewRecipe() {
                   return res.json()
               })
               .then((result) => {
+                  setEditing(false);
                   if (result.id === recipe_id) {
                       navigate('/my-recipes')
                   } else {
                   }
               })
               .catch((error) => {
+                setEditing(false);
                 console.log(error);
               });
         }
@@ -200,7 +204,14 @@ function NewRecipe() {
                   </CardContent>
                   <CardActions>
                       {!id && <Button onClick={handleRecipeClick} variant={"outlined"} size="small">Create Recipe</Button>}
-                      {id && <Button onClick={handleEditClick} variant={"outlined"} size="small">Edit Recipe</Button>}
+                      {id && <Button onClick={handleEditClick} variant={"outlined"} size="small">
+                          {loading ? <Box display={'inline-flex'}>
+                            <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
+                                Please wait, it may take some time.
+                            </Typography>
+                            <CircularProgress  color={"secondary"}/>
+                        </Box>: "Edit Recipe"}
+                      </Button>}
                   </CardActions>
                 </Card>
 
