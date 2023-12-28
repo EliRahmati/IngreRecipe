@@ -209,7 +209,7 @@ function NewRecipe() {
                             <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
                                 Please wait, it may take some time.
                             </Typography>
-                            <CircularProgress  color={"secondary"}/>
+                            <CircularProgress/>
                         </Box>: "Edit Recipe"}
                       </Button>}
                   </CardActions>
