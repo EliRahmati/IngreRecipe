@@ -205,7 +205,7 @@ function NewRecipe() {
                   <CardActions>
                       {!id && <Button onClick={handleRecipeClick} variant={"outlined"} size="small">Create Recipe</Button>}
                       {id && <Button onClick={handleEditClick} variant={"outlined"} size="small">
-                          {loading ? <Box display={'inline-flex'}>
+                          {editing ? <Box display={'inline-flex'}>
                             <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
                                 Please wait, it may take some time.
                             </Typography>
