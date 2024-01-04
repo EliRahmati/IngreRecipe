@@ -100,7 +100,7 @@ function Login() {
                         </Box> : "Login"}
                     </Button>
                       <Button variant={"outlined"} component={Link} to="/register" color="primary" size="small" sx={{marginLeft: 2}}>
-                      Creat New Account
+                      Create New Account
                 </Button>
                   </CardActions>
                     {error && <Typography sx={{margin: 2}} color={"red"}>
