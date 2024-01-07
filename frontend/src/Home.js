@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppBar, Toolbar, Typography, Button, Container, Box, TextField} from '@mui/material';
 import {Link, useNavigate} from 'react-router-dom';
 import Search from "./Search";
 import useAppContext from "./index";
 import homeImage from './images/food.jpg';
+import {config} from "./Params";
 
 
 
@@ -11,6 +12,10 @@ const Home = () => {
     const navigate = useNavigate();
     const {user, updateUser} = useAppContext()
     const {token, username} = user
+
+    useEffect(() => {
+        fetch(`${config.baseUrl}/recipes`)
+    }, [])
 
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})
