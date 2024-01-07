@@ -3,6 +3,7 @@ import {AppBar, Toolbar, Typography, Button, Container, Box, TextField} from '@m
 import {Link, useNavigate} from 'react-router-dom';
 import Search from "./Search";
 import useAppContext from "./index";
+import homeImage from './images/food.jpg';
 
 
 
@@ -46,7 +47,7 @@ const Home = () => {
               width: '100%'
             }}
             alt="The house from the offer."
-            src="https://w.wallhaven.cc/full/x6/wallhaven-x6eed3.jpg"
+            src={homeImage}
           />
       </Box>
       <Box>
