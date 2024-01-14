@@ -9,7 +9,7 @@ import {
 import useAppContext from "./index";
 import {Link, useNavigate, useParams} from "react-router-dom";
 
-function NewRecipe() {
+function Recipe() {
     const { id } = useParams();
     const navigate = useNavigate();
     const {user, updateUser} = useAppContext()
@@ -19,10 +19,8 @@ function NewRecipe() {
     const [short, setShort] = useState("");
     const [description, setDescription] = useState("");
     const [published, setPublished] = useState(false);
-    const [error, setError] = useState(false)
     const recipe_id = id?.slice(1)
     const [loading, setLoading] = useState(false)
-
 
     const handleLogoutClick = () => {
         updateUser({username: '', token: ''})
@@ -32,29 +30,7 @@ function NewRecipe() {
     useEffect(() => {
       if (recipe_id) {
           setLoading(true);
-          if (token && !published) {
-              fetch(`${config.baseUrl}/me/recipe/${recipe_id}`, {
-                    method: "GET",
-                    headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
-                })
-                  .then((res) => {
-                      return res.json()
-                  })
-                  .then((result) => {
-                      setLoading(false);
-                      setName(result.name);
-                      setType(result.type);
-                      setShort(result.short);
-                      setDescription(result.description);
-                      setPublished(result.published)
-                    console.log(result);
-                  })
-                  .catch((error) => {
-                      setLoading(false);
-                    console.log(error);
-                  });
-          } else {
-              fetch(`${config.baseUrl}/recipe/${recipe_id}`, {
+          fetch(`${config.baseUrl}/recipe/${recipe_id}`, {
                     method: "GET",
                     headers: {'accept': 'application/json'}
                 })
@@ -74,7 +50,6 @@ function NewRecipe() {
                       setLoading(false);
                     console.log(error);
                   });
-          }
       }
 
   }, [id]);
@@ -152,4 +127,4 @@ function NewRecipe() {
 }
 
 
-export default NewRecipe
+export default Recipe
