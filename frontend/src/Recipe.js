@@ -32,7 +32,7 @@ function NewRecipe() {
     useEffect(() => {
       if (recipe_id) {
           setLoading(true);
-          if (token) {
+          if (token && !published) {
               fetch(`${config.baseUrl}/me/recipe/${recipe_id}`, {
                     method: "GET",
                     headers: {'accept': 'application/json', 'Authorization': `Bearer ${token || ''}`}
