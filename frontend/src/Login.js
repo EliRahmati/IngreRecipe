@@ -96,7 +96,7 @@ function Login() {
                             <Typography fontSize={'small'} sx={{alignSelf:'center'}}>
                                 Please wait, it may take some time.
                             </Typography>
-                            <CircularProgress  color={"secondary"}/>
+                            <CircularProgress sx={{ color: 'white' }}/>
                         </Box> : "Login"}
                     </Button>
                       <Button variant={"outlined"} component={Link} to="/register" color="primary" size="small" sx={{marginLeft: 2}}>
