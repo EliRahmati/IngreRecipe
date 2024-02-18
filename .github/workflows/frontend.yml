@@ -12,11 +12,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Change directory to frontend
-      run: cd frontend
-
     - name: Install dependencies
-      run: npm install
+      run: cd frontend;npm install
 
     - name: Run tests
-      run: npm test
+      run: cd frontend;npm test
