@@ -12,7 +12,7 @@ import {
     Toolbar,
     AppBar, CircularProgress
 } from '@mui/material';
-import useAppContext from "./index";
+import useAppContext from "./useAppContext";
 import {Link, useNavigate} from "react-router-dom";
 import {config} from "./Params";
 

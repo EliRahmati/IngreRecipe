@@ -6,7 +6,7 @@ import {
     Button,
     Toolbar, AppBar, CircularProgress
 } from '@mui/material';
-import useAppContext from "./index";
+import useAppContext from "./useAppContext";
 import {Link, useNavigate, useParams} from "react-router-dom";
 
 function Recipe() {

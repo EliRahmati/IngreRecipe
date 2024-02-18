@@ -1,17 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {AppBar, Toolbar, Typography, Button, Container, Box, TextField} from '@mui/material';
+import React, {useEffect} from 'react';
+import {AppBar, Toolbar, Typography, Button, Box} from '@mui/material';
 import {Link, useNavigate} from 'react-router-dom';
-import Search from "./Search";
-import useAppContext from "./index";
 import homeImage from './images/food.jpg';
 import {config} from "./Params";
+import useAppContext from "./useAppContext";
 
 
 
 const Home = () => {
     const navigate = useNavigate();
-    const {user, updateUser} = useAppContext()
-    const {token, username} = user
+    const {user, updateUser} = useAppContext() || {}
+    const {token, username} = user || {}
 
     useEffect(() => {
         fetch(`${config.baseUrl}/recipes`)

@@ -8,33 +8,7 @@ import {BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Home";
 import NewRecipe from "./NewRecipe";
 import Recipe from "./Recipe";
-
-
-
-const AppContext = createContext();
-const AppProvider = ({ children }) => {
-  const [user, setUser] = useState({username: localStorage.getItem('username'), token: localStorage.getItem('token')});
-
-  const updateUser = (newValue) => {
-      localStorage.setItem('token', newValue.token)
-      localStorage.setItem('username', newValue.username)
-    setUser(newValue);
-  };
-
-  return (
-    <AppContext.Provider value={{ user, updateUser }}>
-      {children}
-    </AppContext.Provider>
-  );
-};
-
-const useAppContext = () => {
-  return useContext(AppContext);
-};
-
-export default useAppContext;
-
-
+import {AppProvider} from "./useAppContext";
 
 function App() {
    return (

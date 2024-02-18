@@ -13,7 +13,7 @@ import {
     CircularProgress
 } from '@mui/material';
 
-import useAppContext from "./index";
+import useAppContext from "./useAppContext";
 import {Link, useNavigate} from "react-router-dom";
 
 function Register() {
