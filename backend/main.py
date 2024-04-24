@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from slowapi.errors import RateLimitExceeded
 from sqlalchemy import create_engine, Column, Integer, String, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base
 from uuid import UUID, uuid4
@@ -12,6 +13,8 @@ from sqlalchemy.dialects.postgresql import UUID as alchemyUUID
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import logging
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -27,6 +30,8 @@ URL3 = os.getenv("URL3")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+
 
 
 # Database models
@@ -55,6 +60,13 @@ class UserDB(Base):
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+
+
+limiter = Limiter(key_func=get_remote_address)
+app = FastAPI()
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Configure CORS
 origins = [
