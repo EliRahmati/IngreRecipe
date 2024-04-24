@@ -11,6 +11,7 @@ from typing import Optional, List
 from sqlalchemy.dialects.postgresql import UUID as alchemyUUID
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import logging
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -118,6 +119,11 @@ class UserInDB(User):
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
 oauth_2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)  # Set log level to INFO
+logger = logging.getLogger(__name__)  # Get logger for this module
+
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -128,6 +134,7 @@ def get_password_hash(password):
 
 
 def get_user(username: str):
+    logger.info(f"get_user/username: {username}")
     with SessionLocal() as session:
         user = session.query(UserDB).filter(UserDB.username == username).first()
         if user is None:
@@ -137,6 +144,7 @@ def get_user(username: str):
 
 
 def authentication_user(username: str, password: str):
+    logger.info(f"authentication_user/username: {username}")
     user = get_user(username)
     if not user:
         return False
@@ -159,17 +167,20 @@ def create_access_token(data: dict, expires_delta: timedelta or None = None):
 
 
 async def get_current_user(token: str = Depends(oauth_2_scheme)):
+    logger.info(f"get_current_user/token: {token}")
     credential_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                          detail="Could not validate credentials", headers={"WWW-Authentication": "Bearer"})
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
+        logger.info(f"get_current_user/username: {username}")
         if username is None:
             raise credential_exception
 
         token_data = TokenData(username=username)
     except JWTError:
+        logger.error(f"get_current_user/JWTError: {JWTError}")
         raise credential_exception
 
     user = get_user(username=token_data.username)
@@ -180,6 +191,7 @@ async def get_current_user(token: str = Depends(oauth_2_scheme)):
 
 
 async def get_current_active_user(current_user: UserInDB = Depends(get_current_user)):
+    logger.error(f"get_current_user/JWTError: {JWTError}")
     return current_user
 
 
